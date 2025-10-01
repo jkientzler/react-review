@@ -91,7 +91,16 @@ function NoteEditor({notesListSetter}: {notesListSetter: React.Dispatch<React.Se
           value={content}
           onChange={(e) => setContent(e.target.value)}
         />
-        <button className="border rounded border-black px-4 py-2 mx-10" onClick={() => { notesListSetter(prev => [...prev, {title, content, id: prev.length + 1}]) } }>Save</button>
+        <button type="button" className="border rounded border-black px-4 py-2 mx-10" onClick={() => {
+          const newNote: NoteType = {
+            title,
+            content,
+            id: Date.now()
+          };
+          notesListSetter((prevNotes) => [...prevNotes, newNote]);
+          setTitle("");
+          setContent("");
+        }}>Save</button>
       </form>
     </>
   );
