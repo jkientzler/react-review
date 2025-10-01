@@ -1,3 +1,4 @@
+'use client'
 import React, { useState } from "react";
 
 type NoteType = {
@@ -62,27 +63,36 @@ function NotesList({ notes }: { notes: Array<NoteType> }) {
   );
 }
 
-function NoteEditor() {
+function NoteEditor({notesListSetter}: {notesListSetter: React.Dispatch<React.SetStateAction<Array<NoteType>>>}) {
+  const [title, setTitle] = useState("");
+  const [content, setContent] = useState("");
   return (
     <>
-      <div className="grid grid-cols-1 gap-4 justify-items-stretch">
-        <label htmlFor="title" className="text-l">
+      <form className="grid grid-cols-1 gap-4 justify-items-stretch">
+        <label htmlFor="title" className="text-l mx-10">
           Enter a title
         </label>
         <input
           id="title"
           name="title"
+          placeholder="Title"
           className="border rounded border-black mx-10"
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
         />
-        <label htmlFor="note" className="text-l">
+        <label htmlFor="note" className="text-l mx-10">
           Enter your note
         </label>
         <textarea
           id="note"
           name="note"
-          className="border rounded border-black"
+          placeholder="Note"
+          className="border rounded border-black mx-10"
+          value={content}
+          onChange={(e) => setContent(e.target.value)}
         />
-      </div>
+        <button className="border rounded border-black px-4 py-2 mx-10" onClick={() => { notesListSetter(prev => [...prev, {title, content, id: prev.length + 1}]) } }>Save</button>
+      </form>
     </>
   );
 }
@@ -94,7 +104,7 @@ export default function Home() {
     <div>
       <main>
         <NotesHeader />
-        <NoteEditor />
+        <NoteEditor notesListSetter={setNotesList}/>
         <NotesList notes={notesList} />
       </main>
       <footer></footer>
