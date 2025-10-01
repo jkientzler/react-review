@@ -1,10 +1,12 @@
-import Image from "next/image";
+import React, { useState } from "react";
+
 type NoteType = {
   title: string;
   id: number;
   content: string;
 };
-const test_notes = [
+
+const notes_init_val = [
   {
     title: "Test Note 1!!!!!",
     id: 1,
@@ -24,28 +26,29 @@ function NotesHeader() {
       <h1 className="text-xl mt-8">My Notes</h1>
       <p>
         Your notes are listed below, click Create to make a new one, Save once
-        you're done editing, and Delete to remove notes you no longer need.
+        you&apos;re done editing, and Delete to remove notes you no longer need.
       </p>
     </>
   );
 }
 
-function NoteListItem({ note }: NoteType) {
+function NoteListItem({ note }: {note: NoteType}) {
   const title_preview = note.title.slice(0, 30);
   const content_preview = note.content.slice(0, 20);
   return (
     <tr>
-      <td className="px-2">{note.title}</td>
+      <td className="px-2">{title_preview}</td>
       <td className="px-2">{content_preview}</td>
     </tr>
   );
 }
 
-function NotesList({ notes }: Arr<NoteType>) {
-  const rows = [];
-  notes.forEach((note) => {
-    rows.push(<NoteListItem note={note} key={note.id} />);
-  });
+function NotesList({ notes }: { notes: Array<NoteType> }) {
+  // render rows from notes array using map — use React.ReactElement[] for typing
+  const rows: React.ReactElement[] = notes.map((note) => (
+    <NoteListItem note={note} key={note.id} />
+  ));
+
   return (
     <table>
       <thead>
@@ -62,17 +65,16 @@ function NotesList({ notes }: Arr<NoteType>) {
 function NoteEditor() {
   return (
     <>
-      <NotesList notes={test_notes} />
       <div className="grid grid-cols-1 gap-4 justify-items-stretch">
-        <label for="title" className="text-l">
+        <label htmlFor="title" className="text-l">
           Enter a title
         </label>
         <input
           id="title"
           name="title"
-          className="border rounded border-black m-x-10"
+          className="border rounded border-black mx-10"
         />
-        <label for="note" className="text-l">
+        <label htmlFor="note" className="text-l">
           Enter your note
         </label>
         <textarea
@@ -86,11 +88,14 @@ function NoteEditor() {
 }
 
 export default function Home() {
+  const [notesList, setNotesList] = useState<Array<NoteType>>(notes_init_val);
+
   return (
     <div>
       <main>
         <NotesHeader />
         <NoteEditor />
+        <NotesList notes={notesList} />
       </main>
       <footer></footer>
     </div>
