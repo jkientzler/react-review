@@ -63,9 +63,9 @@ function NotesList({ notes }: { notes: Array<NoteType> }) {
   );
 }
 
-function NoteEditor({notesListSetter}: {notesListSetter: React.Dispatch<React.SetStateAction<Array<NoteType>>>}) {
-  const [title, setTitle] = useState("");
-  const [content, setContent] = useState("");
+function NoteEditor({noteTitle, noteContent, notesListSetter}: {noteTitle: string, noteContent: string, notesListSetter: React.Dispatch<React.SetStateAction<Array<NoteType>>>}) {
+  const [title, setTitle] = useState(noteTitle);
+  const [content, setContent] = useState(noteContent);
   return (
     <>
       <form className="grid grid-cols-1 gap-4 justify-items-stretch">
@@ -108,12 +108,12 @@ function NoteEditor({notesListSetter}: {notesListSetter: React.Dispatch<React.Se
 
 export default function Home() {
   const [notesList, setNotesList] = useState<Array<NoteType>>(notes_init_val);
-
+  const [currentNote, setCurrentNote] = useState<NoteType>({id: 0, title: "", content: ""});
   return (
     <div>
       <main>
         <NotesHeader />
-        <NoteEditor notesListSetter={setNotesList}/>
+        <NoteEditor notesListSetter={setNotesList} noteTitle={currentNote.title} noteContent={currentNote.content} />
         <NotesList notes={notesList} />
       </main>
       <footer></footer>
