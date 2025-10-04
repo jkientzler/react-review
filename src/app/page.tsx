@@ -33,33 +33,25 @@ function NotesHeader() {
   );
 }
 
-function NoteListItem({ note }: {note: NoteType}) {
+function NoteListItem({ note, currNoteSetter }: {note: NoteType, currNoteSetter: React.Dispatch<React.SetStateAction<NoteType>>}) {
   const title_preview = note.title.slice(0, 30);
   const content_preview = note.content.slice(0, 20);
   return (
-    <tr>
-      <td className="px-2">{title_preview}</td>
-      <td className="px-2">{content_preview}</td>
-    </tr>
+    <div className="border rounded border-black my-2" onClick={() => { currNoteSetter(note); console.log(note); }}>
+      <p className="px-2">{title_preview}</p>
+      <p className="px-2">{content_preview}</p>
+    </div>
   );
 }
 
-function NotesList({ notes }: { notes: Array<NoteType> }) {
+function NotesList({ notes, currNoteSetter }: { notes: Array<NoteType>, currNoteSetter: React.Dispatch<React.SetStateAction<NoteType>> }) {
   // render rows from notes array using map — use React.ReactElement[] for typing
   const rows: React.ReactElement[] = notes.map((note) => (
-    <NoteListItem note={note} key={note.id} />
+    <NoteListItem note={note} key={note.id} currNoteSetter={currNoteSetter} />
   ));
 
   return (
-    <table>
-      <thead>
-        <tr>
-          <th>Title</th>
-          <th>Content</th>
-        </tr>
-      </thead>
-      <tbody>{rows}</tbody>
-    </table>
+      <div>{rows}</div>
   );
 }
 
@@ -114,7 +106,7 @@ export default function Home() {
       <main>
         <NotesHeader />
         <NoteEditor notesListSetter={setNotesList} noteTitle={currentNote.title} noteContent={currentNote.content} />
-        <NotesList notes={notesList} />
+        <NotesList notes={notesList} currNoteSetter={setCurrentNote} />
       </main>
       <footer></footer>
     </div>
